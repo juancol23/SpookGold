@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -43,7 +44,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.valdemar.spook.R;
+import com.valdemar.spook.model.Comentarios;
 import com.valdemar.spook.util.sounds.BackgroundSoundService;
+import com.valdemar.spook.utilidades.RelatoViewHolderStructureComentarios;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,11 +103,11 @@ public class DescBlankFragment extends Fragment implements TextToSpeech.OnInitLi
         initSpeack();
         // initRemove(mPost_key,root);
         // initBloquear(mPost_key,root);
-        //initComentarios(root,mPost_key);
+        initComentarios(root,mPost_key);
         return root;
 
     }
-/*
+
     private void initComentarios(View root, final String mPost_key) {
 
         mProgress = new ProgressDialog(getContext());
@@ -132,28 +135,39 @@ public class DescBlankFragment extends Fragment implements TextToSpeech.OnInitLi
 
         Query queryRef = mDatabaseMisComentarios.child(mPost_key);
 
+        // Configura las opciones del FirebaseRecyclerAdapter
+        FirebaseRecyclerOptions<Comentarios> options = new FirebaseRecyclerOptions.Builder<Comentarios>()
+                .setQuery(queryRef, Comentarios.class)
+                .build();
+
+        // Crea el adaptador con las nuevas opciones
         FirebaseRecyclerAdapter<Comentarios, RelatoViewHolderStructureComentarios>
-                firebaseRecyclerAdapterMyLecturas = new FirebaseRecyclerAdapter<Comentarios, RelatoViewHolderStructureComentarios>(
-                Comentarios.class,
-                R.layout.view_comentarios,
-                RelatoViewHolderStructureComentarios.class,queryRef) {
+                firebaseRecyclerAdapterMyLecturas = new FirebaseRecyclerAdapter<Comentarios, RelatoViewHolderStructureComentarios>(options) {
+            @NonNull
             @Override
-            protected void populateViewHolder(RelatoViewHolderStructureComentarios viewHolder, Comentarios model, int i) {
-                //final String post_key = getRef(position).getKey();
-                if(model !=null){
+            public RelatoViewHolderStructureComentarios onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                // Inflar el layout para cada item de la lista
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_comentarios, parent, false);
+                return new RelatoViewHolderStructureComentarios(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull RelatoViewHolderStructureComentarios viewHolder, int position, @NonNull Comentarios model) {
+                // Asignar los datos al ViewHolder
+                if(model != null) {
                     viewHolder.setAutor(model.getNombre());
                     viewHolder.setMensaje(model.getComentario());
                     viewHolder.goneHora();
                     viewHolder.setImage(getActivity().getApplicationContext(), model.getFoto());
                 }
-
-
-
             }
-
         };
 
+
         mRecyclerComentarios.setAdapter(firebaseRecyclerAdapterMyLecturas);
+
+        // Inicia la escucha del adaptador
+        firebaseRecyclerAdapterMyLecturas.startListening();
 
         TextView mTxtComentarios = root.findViewById(R.id.txtComentarios);
 
@@ -220,11 +234,6 @@ public class DescBlankFragment extends Fragment implements TextToSpeech.OnInitLi
                     btnModalCancel.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            InicioFragment inicio = new InicioFragment();
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.coordinator, inicio)
-                                    .addToBackStack(null)
-                                    .remove(inicio)
-                                    .commit();
                             MyDialog.dismiss();
                         }
                     });
@@ -242,7 +251,6 @@ public class DescBlankFragment extends Fragment implements TextToSpeech.OnInitLi
 
     }
 
-*/
     private void initView(View root) {
 
         Bundle datosRecuperados = getArguments();
