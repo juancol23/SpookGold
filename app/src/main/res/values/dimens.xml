@@ -7,4 +7,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="width_cards">250dp</dimen>
     <dimen name="height_cards">150dp</dimen>
+    <dimen name="reactions_text_size">16dp</dimen>
 </resources>

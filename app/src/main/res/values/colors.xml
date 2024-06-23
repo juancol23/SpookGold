@@ -11,5 +11,6 @@
 
     <color name="colorPrimaryDark">#000</color>
     <color name="rojo_spook">#da152c</color>
+    <color name="texto_desc_gris">#c1c0c0</color>
 
 </resources>

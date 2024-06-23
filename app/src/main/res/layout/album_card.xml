@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_item_recycler_structure_h"
+    android:layout_width="175dp"
+    android:layout_height="170dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <FrameLayout
+        android:id="@+id/item_recycler_structure_background_h"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha=".4"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/title_album"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/item_recycler_structure_linear_h"
+        android:layout_marginLeft="8dp"
+        android:gravity="left"
+        android:text="Título"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/item_recycler_structure_linear_h"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/category_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:text="Categoria"
+            android:textColor="#dadada"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:text="por"
+            android:textColor="#dadada"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/send_by_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:text="Publicado por:"
+            android:textColor="#dadada"
+            android:textSize="12sp" />
+
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/item_recycler_structure_desc_h"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:text="♡" />
+
+
+    <ImageView
+        android:id="@+id/reaction_icon"
+        android:layout_margin="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="right"
+        android:tag="empty_reaction"
+        android:background="@drawable/favorite_flaco"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/me_gusta_icon"
+            android:layout_marginRight="2dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@mipmap/ic_fb_like"
+            />
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/me_encanta_icon"
+            android:layout_marginRight="2dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@mipmap/ic_fb_love"
+            />
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/me_asombra_icon"
+            android:layout_marginRight="2dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@mipmap/ic_fb_wow"
+            />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/txt_nro_reactions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" "
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</RelativeLayout>
+
