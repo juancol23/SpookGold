@@ -13,6 +13,24 @@
         android:theme="@style/Theme.SpookGold"
         tools:targetApi="31">
         <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.ForgetPasswordRelato"
+            android:exported="false" />
+        <activity
+            android:name=".view.RegisterRelato"
+            android:exported="false" />
+        <activity
+            android:name=".view.AccessRelato"
+            android:exported="false" />
+        <activity
             android:name=".tiktok.TiktokMainActivity"
             android:exported="false" />
         <activity
@@ -20,11 +38,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.SpookGold.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
