@@ -2,8 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/busquedaSpooky"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Moneda"
+        android:icon="@drawable/ic_moneda"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/videoSpooky"
+        android:orderInCategory="100"
+        android:title="Moneda"
+        android:icon="@drawable/video_spook"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/notification"
+        android:orderInCategory="100"
+        android:title="Notificaciones"
+        android:visible="false"
+        android:icon="@drawable/ic_notification"
         app:showAsAction="never" />
+
+
+
+
 </menu>
