@@ -46,6 +46,7 @@ import com.valdemar.spook.MainActivity;
 import com.valdemar.spook.R;
 import com.valdemar.spook.model.style_chat.IModal;
 import com.valdemar.spook.ui.home.HomeFragment;
+import com.valdemar.spook.view.AccessRelato;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -371,7 +372,7 @@ public class ChatFragment extends Fragment implements AdapterMensajes.OnEliminar
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mProgresDialog.setMessage("Publicando imagen");
-                        mProgresDialog.setCancelable(false);
+                        mProgresDialog.setCancelable(true);
                         mProgresDialog.show();
                         Uri u = data.getData();
                         storageReference = storage.getReference("imagenes_chat");//imagenes_chat
@@ -455,7 +456,7 @@ public class ChatFragment extends Fragment implements AdapterMensajes.OnEliminar
     }
 
     private void iniciaSesion(){
-        startActivity(new Intent(getActivity(), MainActivity.class));
+        startActivity(new Intent(getActivity(), AccessRelato.class));
     }
 
     public void hideSoftKeyboard() {
