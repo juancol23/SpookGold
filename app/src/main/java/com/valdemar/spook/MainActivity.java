@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MyDialog = new Dialog(MainActivity.this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -91,8 +90,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.busquedaSpooky) {
+            // Toast.makeText(ViewSpook.this,"Buqueda",Toast.LENGTH_SHORT).show();
+            openCoins();
+            Toast.makeText(MainActivity.this,
+                    "Video .",
+                    Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+        }
+
 
     public void openCoins() {
+        MyDialog = new Dialog(MainActivity.this);
+
         MyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         MyDialog.setContentView(R.layout.activity_modal_coins_needs);
         MyDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
