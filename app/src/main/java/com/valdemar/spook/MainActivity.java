@@ -28,6 +28,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.valdemar.spook.databinding.ActivityMainBinding;
+import com.valdemar.spook.tiktok.TiktokMainActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -83,9 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.LENGTH_SHORT).show();
             return true;
         } else {
-            Toast.makeText(MainActivity.this,
-                    "No disponible.",
-                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, TiktokMainActivity.class));
             return super.onOptionsItemSelected(item);
         }
     }
@@ -99,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(MainActivity.this,
                     "Video .",
                     Toast.LENGTH_SHORT).show();
+            return true;
+        }else if (item.getItemId() == R.id.videoSpooky) {
+            startActivity(new Intent(MainActivity.this, TiktokMainActivity.class));
             return true;
         }
 
