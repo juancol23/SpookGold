@@ -9,5 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
 
+    <color name="colorPrimaryDark">#000</color>
+    <color name="rojo_spook">#da152c</color>
 
 </resources>
