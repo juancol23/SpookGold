@@ -61,7 +61,7 @@ public class ForgetPasswordRelato extends AppCompatActivity {
         MyDialog = new Dialog(ForgetPasswordRelato.this);
 
         title = (TextView) findViewById(R.id.forget_title_sangrienta_lectura);
-        String text = "<font color='#da152c'>Reiniciar</font> Password";
+        String text = "<font color='#da152c'>Reiniciar</font> Contraseña";
         Log.v("textq1",text);
         title.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 
@@ -70,9 +70,9 @@ public class ForgetPasswordRelato extends AppCompatActivity {
 
         String bloodLustFuente= "fuentes/BloodLust.ttf";
         String nightmareFuente= "fuentes/Nigh.ttf";
-        this.BloodLust = Typeface.createFromAsset(getAssets(),bloodLustFuente);
+       /* this.BloodLust = Typeface.createFromAsset(getAssets(),bloodLustFuente);
         this.Nightmare = Typeface.createFromAsset(getAssets(),nightmareFuente);
-        title.setTypeface(BloodLust);
+        title.setTypeface(BloodLust);*/
 
         mForget_user_email = (EditText) findViewById(R.id.forget_user_email);
 
