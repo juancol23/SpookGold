@@ -1,21 +1,24 @@
-package com.valdemar.spook.ui.home;
+package com.valdemar.spook.modo_lectura;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,21 +28,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.valdemar.spook.R;
-import com.github.pgreze.reactions.ReactionPopup;
 import com.valdemar.spook.holder.CategoryViewHolder;
 import com.valdemar.spook.model.Category;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.valdemar.spook.modo_lectura.CategoryFragment;
-
 import kotlin.jvm.functions.Function1;
 
+public class CategoryFragment extends Fragment {
 
-public class HomeFragment extends Fragment {
-
-
-    private RecyclerView mRecyclerEpisodiosPerdidos;
-    private DatabaseReference mDatabase,mDataBaseChatStyle, mDatabaseSlides;
+    private RecyclerView mRecycler;
+    private DatabaseReference mDatabase;
     private ProgressDialog mProgress;
 
     private long nroMeGusta = 0;
@@ -57,12 +54,14 @@ public class HomeFragment extends Fragment {
     final DatabaseReference mReactionsRef= FirebaseDatabase.getInstance().getReference()
             .child("Reacciones").child("id_proyectos");
 
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    private String blog_category = null;
 
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root =  inflater.inflate(R.layout.fragment_category, container, false);
 
         initConfigNetwork();
         initView(root);
@@ -70,36 +69,36 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private void initConfigNetwork() {
         mProgress = new ProgressDialog(getActivity().getApplicationContext());
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("SpookCategoria");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Historias");
         mDatabase.keepSynced(true);
 
-        mDataBaseChatStyle = FirebaseDatabase.getInstance().getReference().child("chats");
-        mDataBaseChatStyle.keepSynced(true);
 
     }
 
     private void initView(View root) {
-        initEpisodiosPerdidos(root);
+
+        Bundle datosRecuperados = getArguments();
+        if (datosRecuperados == null) {
+            // No hay datos, manejar excepción
+            return;
+        }
+        blog_category = datosRecuperados.getString("blog_category");
+
+        initViewGrillaCategory(root,blog_category);
+
     }
 
-    private void initEpisodiosPerdidos(final View root) {
-        Query queryategorysall = mDatabase;
+    private void initViewGrillaCategory(final View root, String blog_category) {
+        Query queryategorysall = mDatabase.orderByChild("category").equalTo(blog_category);
 
-        mRecyclerEpisodiosPerdidos = root.findViewById(R.id.recyclerEpisodiosPerdidos);
-        mRecyclerEpisodiosPerdidos.setHasFixedSize(true);
+        mRecycler = root.findViewById(R.id.recyclerAll);
+        mRecycler.setHasFixedSize(true);
 
         // Configurar GridLayoutManager con 2 columnas (ajusta según tus necesidades)
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerEpisodiosPerdidos.setLayoutManager(gridLayoutManager);
+        mRecycler.setLayoutManager(gridLayoutManager);
 
         // Configurar FirebaseRecyclerOptions
         FirebaseRecyclerOptions<Category> options =
@@ -125,14 +124,14 @@ public class HomeFragment extends Fragment {
                         viewHolder.mViewStructure_h.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                viewDetails(model.getCategory(), root);
+                                viewDetails(post_key, root);
                             }
                         });
 
                         viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                reacciones(post_key, viewHolder, position, mRecyclerEpisodiosPerdidos);
+                                reacciones(post_key, viewHolder, position, mRecycler);
                             }
                         });
                     }
@@ -145,7 +144,7 @@ public class HomeFragment extends Fragment {
                     }
                 };
 
-        mRecyclerEpisodiosPerdidos.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
+        mRecycler.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
 
         // Iniciar escucha del adaptador al iniciar la actividad
         firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening();
@@ -162,7 +161,7 @@ public class HomeFragment extends Fragment {
     */
     }
 
-    private void viewDetails(String category, View root){
+    private void viewDetails(String post_key, View root){
         // mProgress.setMessage("Accediendo...");
         //mProgress.show();
         //mProgress.setCancelable(true);
@@ -175,20 +174,25 @@ public class HomeFragment extends Fragment {
             startActivity(singleBlogIntent);
             */
 
-        CategoryFragment descBlankFragment = new CategoryFragment();
+        DescBlankFragment descBlankFragment = new DescBlankFragment();
 
         Bundle datosSend = new Bundle();
-        datosSend.putString("blog_category", category);
+        datosSend.putString("blog_id", post_key);
         descBlankFragment.setArguments(datosSend);
 
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.contenido_dinamico, descBlankFragment)
                 .addToBackStack(null).commit();
 
+
+        /*RelativeLayout relativoooo = root.findViewById(R.id.relativoooo);
+        relativoooo.setVisibility(View.GONE);
+        */
+
         //mProgress.dismiss();
-        Log.v("id","id"+category);
+        Log.v("id","id"+post_key);
     }
 
-    private void reacciones(final String post_key, final CategoryViewHolder viewHolder, final int position, final RecyclerView mRecyclerEpisodiosPerdidos) {
+    private void reacciones(final String post_key, final CategoryViewHolder viewHolder, final int position, final RecyclerView mRecycler) {
 
         String uID = "";
 
@@ -294,7 +298,7 @@ public class HomeFragment extends Fragment {
                         }
                     }
 
-                    mRecyclerEpisodiosPerdidos.getAdapter().notifyItemChanged(position);
+                    mRecycler.getAdapter().notifyItemChanged(position);
                 }
 
                 // Close selector if not invalid item (testing purpose)
