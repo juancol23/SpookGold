@@ -1,21 +1,33 @@
 package com.valdemar.spook;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -27,8 +39,23 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.valdemar.spook.databinding.ActivityMainBinding;
 import com.valdemar.spook.tiktok.TiktokMainActivity;
+import com.valdemar.spook.util.sounds.BackgroundSoundService;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,6 +64,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Dialog MyDialog;
     private SharedPreferences monedas = null;
     private TextView mId_monedas_text;
+
+    private CircleImageView mMenu_profile_image;
+    private ImageView mConfigurarcion;
+    private TextView mMenu_profile_name;
+    private TextView mMenu_profile_email;
+    private static final int PHOTO_SEND = 1;
+    private static final int PHOTO_PERFIL = 2;
+    private StorageReference storageReference;
+    private FirebaseStorage storage;
+    private ProgressDialog mProgresDialog;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabaseVersionApp;
+    private SharedPreferences prefs_sound = null;
+    private SharedPreferences prefs_notificacion = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +99,197 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        initView();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+
+
+        storage = FirebaseStorage.getInstance();
+        mProgresDialog = new ProgressDialog(MainActivity.this);
+
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.view_spook, menu);
+        mConfigurarcion = findViewById(R.id.configurarcion);
+        mConfigurarcion.setVisibility(View.GONE);
+        mConfigurarcion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(ViewSpook.this, Configuration.class));
+            }
+        });
+
+        mMenu_profile_image = (CircleImageView) findViewById(R.id.menu_profile_image);
+        mMenu_profile_name = findViewById(R.id.menu_profile_name);
+        mMenu_profile_email = findViewById(R.id.menu_profile_email);
+        mId_monedas_text = (TextView) findViewById(R.id.monedas_profile);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            Uri photoUrl = user.getPhotoUrl();
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+
+            mMenu_profile_name.setText(name);
+            if (user.getEmail() != null) {
+                mMenu_profile_email.setText(email);
+            }
+
+            Glide.with(MainActivity.this)
+                    .load(photoUrl)
+                    .thumbnail(Glide.with(MainActivity.this)
+                            .load(R.drawable.b))
+                    .into(mMenu_profile_image);
+        }
+        mMenu_profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(user != null) {
+                    // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+                    AlertDialog.Builder makeDialog = new AlertDialog.Builder(MainActivity.this);
+                    makeDialog.setMessage("Si continuar editarás tu foto de perfil");
+                    makeDialog.setTitle("Foto perfil");
+
+                    makeDialog.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                            i.setType("image/jpeg");
+                            i.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
+                            startActivityForResult(Intent.createChooser(i,"Selecciona una foto"),PHOTO_PERFIL);
+                        }
+                    });
+
+                    makeDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog ad = makeDialog.create();
+                    ad.show();
+                }
+            }
+        });
         return true;
+    }
+
+    private void initView() {
+        mAuth = FirebaseAuth.getInstance();
+        validarActualizacion();
+        initNotificacion();
+        initSettingCheck();
+
+    }
+
+
+
+    private void initSettingCheck() {
+
+        if(prefs_sound.getBoolean("prefs_sound", true)){
+            Intent svc = new Intent(getApplicationContext(), BackgroundSoundService.class);
+            startService(svc);
+        }else{
+            Intent svc = new Intent(getApplicationContext(), BackgroundSoundService.class);
+            stopService(svc);
+        }
+
+        if(prefs_notificacion.getBoolean("prefs_notificacion", true)){
+            //FirebaseMessaging.getInstance().subscribeToTopic("Historias");
+            FirebaseMessaging.getInstance().subscribeToTopic("chat");
+        }else{
+            //FirebaseMessaging.getInstance().unsubscribeFromTopic("Historias");
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("chat");
+        }
+
+    }
+
+    public void validarActualizacion(){
+
+        mDatabaseVersionApp = FirebaseDatabase.getInstance().getReference().child("VersionApp");
+        mDatabaseVersionApp.keepSynced(true);
+        mDatabaseVersionApp.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String appVersion = (String) dataSnapshot.child("version").getValue();
+                String title = (String) dataSnapshot.child("title").getValue();
+                String body = (String) dataSnapshot.child("body").getValue();
+
+                Log.v("PackageInfo",""+appVersion);
+
+                PackageInfo pInfo = null;
+
+                try {
+                    pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                String version = pInfo.versionName;
+                int verCode = pInfo.versionCode;
+
+                Log.v("PackageInfo",""+version);
+                Log.v("PackageInfo",""+verCode);
+
+                int verCodeActual = Integer.parseInt(appVersion);
+
+                if(verCode < verCodeActual){
+                    ModalCheckUpdate(title,body);
+                    Log.v("PackageInfo",""+verCode+""+verCodeActual);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void ModalCheckUpdate(String title,String body){
+
+        MyDialog = new Dialog(MainActivity.this);
+        MyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        MyDialog.setContentView(R.layout.activity_check_update_version_app);
+        MyDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView mModal_check_update_title = MyDialog.findViewById(R.id.modal_check_update_title);
+        TextView mModal_check_update_body = MyDialog.findViewById(R.id.modal_check_update_body);
+
+        mModal_check_update_title.setText(title);
+        mModal_check_update_body.setText(body);
+
+        Button btnModalActualizar = MyDialog.findViewById(R.id.modal_check_update_actualizar);
+        Button btnModalCancel = MyDialog.findViewById(R.id.modal_check_update_later);
+
+        btnModalActualizar.setEnabled(true);
+
+        btnModalActualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyDialog.dismiss();
+                Intent intent1 = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id="
+                                + MainActivity.this.getPackageName()));
+                startActivity(intent1);
+            }
+        });
+
+        btnModalCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyDialog.hide();
+            }
+        });
+
+        MyDialog.show();
+
     }
 
     @Override
@@ -152,13 +377,100 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int miValorGuardado = monedas.getInt("valorGuardadoTest", 0);
         int allCoins  = miValorGuardado +coins;
-
         mId_monedas_text.setText("Monedas: "+allCoins);
         monedas.edit().putInt("valorGuardadoTest", allCoins).apply();
         Log.v("rewardItem",""+allCoins+miValorGuardado+coins);
-
     }
 
+
+    private void initNotificacion() {
+        prefs_sound = getSharedPreferences("com.valdemar.spook", MODE_PRIVATE);
+        prefs_notificacion = getSharedPreferences("com.valdemar.spook", MODE_PRIVATE);
+        monedas = getSharedPreferences("relato.app.dems.com.relato.beta", MODE_PRIVATE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PHOTO_PERFIL && resultCode == RESULT_OK){
+            mProgresDialog.setMessage("Actualizando perfil");
+            mProgresDialog.setCancelable(true);
+            mProgresDialog.show();
+
+
+            final FirebaseUser user =  mAuth.getCurrentUser();
+
+
+            Uri u = data.getData();
+            storageReference = storage.getReference("foto_perfil");//imagenes_chat
+            final StorageReference fotoReferencia = storageReference.child(u.getLastPathSegment());
+            fotoReferencia.putFile(u).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    fotoReferencia.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Uri downloadUrl = uri;
+                            // Uri u = taskSnapshot.getDownloadUrl();
+                            String fotoPerfilCadena = downloadUrl.toString();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(Uri.parse(fotoPerfilCadena))
+                                    .build();
+
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d("TAG", "User profile updated.");
+                                            }
+                                        }
+                                    });
+
+                            Glide.with(MainActivity.this)
+                                    .load(fotoPerfilCadena)
+                                    .thumbnail(Glide.with(MainActivity.this)
+                                            .load(R.drawable.b))
+                                    .into(mMenu_profile_image);
+
+                            mProgresDialog.dismiss();
+                        }
+                    });
+
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initSettingCheck();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent svc = new Intent(getApplicationContext(), BackgroundSoundService.class);
+        stopService(svc);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Intent svc = new Intent(getApplicationContext(), BackgroundSoundService.class);
+        stopService(svc);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent svc = new Intent(getApplicationContext(), BackgroundSoundService.class);
+        stopService(svc);
+    }
 
 
 }
