@@ -20,7 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_view_spook" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/setting_"
@@ -28,9 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:visibility="gone"
-
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_settings" />
+        app:srcCompat="@drawable/ic_settings" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
