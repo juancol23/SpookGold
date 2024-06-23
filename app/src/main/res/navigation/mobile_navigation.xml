@@ -24,6 +24,12 @@
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
+        android:id="@+id/nav_chat"
+        android:name="com.valdemar.spook.ui.slideshow.ChatFragment"
+        android:label="Chat grupal"
+        tools:layout="@layout/fragment_chat" />
+
+    <fragment
         android:id="@+id/nav_share"
         android:name="com.valdemar.spook.ui.LogoutFragment"
         android:label="Compartir"
