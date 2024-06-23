@@ -125,7 +125,12 @@ public class HomeFragment extends Fragment {
                         viewHolder.mViewStructure_h.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                viewDetails(model.getCategory(), root);
+                                if(model.getCategory().equalsIgnoreCase("chats")){
+                                    viewDetails(model.getCategory(), root);
+
+                                }else{
+                                    viewDetails(model.getCategory(), root);
+                                }
                             }
                         });
 

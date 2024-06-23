@@ -30,13 +30,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.valdemar.spook.R;
 import com.valdemar.spook.holder.CategoryViewHolder;
 import com.valdemar.spook.model.Category;
+import com.valdemar.spook.model.style_chat.ChatModelBase;
 
 import kotlin.jvm.functions.Function1;
 
 public class CategoryFragment extends Fragment {
 
     private RecyclerView mRecycler;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase,mDataBaseChatStyle;
     private ProgressDialog mProgress;
 
     private long nroMeGusta = 0;
@@ -74,6 +75,8 @@ public class CategoryFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Historias");
         mDatabase.keepSynced(true);
 
+        mDataBaseChatStyle = FirebaseDatabase.getInstance().getReference().child("chats");
+        mDataBaseChatStyle.keepSynced(true);
 
     }
 
@@ -85,8 +88,11 @@ public class CategoryFragment extends Fragment {
             return;
         }
         blog_category = datosRecuperados.getString("blog_category");
-
-        initViewGrillaCategory(root,blog_category);
+        if(blog_category.equalsIgnoreCase("chats")){
+            initViewGrillaCategoryChats(root);
+        }else{
+            initViewGrillaCategory(root,blog_category);
+        }
 
     }
 
@@ -161,18 +167,69 @@ public class CategoryFragment extends Fragment {
     */
     }
 
+
+    private void initViewGrillaCategoryChats(final View root) {
+        Query queryategorysall = mDataBaseChatStyle;
+
+        mRecycler = root.findViewById(R.id.recyclerAll);
+        mRecycler.setHasFixedSize(true);
+
+        // Configurar GridLayoutManager con 2 columnas (ajusta según tus necesidades)
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecycler.setLayoutManager(gridLayoutManager);
+
+        // Configurar FirebaseRecyclerOptions
+        FirebaseRecyclerOptions<ChatModelBase> options =
+                new FirebaseRecyclerOptions.Builder<ChatModelBase>()
+                        .setQuery(queryategorysall, ChatModelBase.class)
+                        .build();
+
+        // Adaptador FirebaseRecyclerAdapter
+        final FirebaseRecyclerAdapter<ChatModelBase, CategoryViewHolder> firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos =
+                new FirebaseRecyclerAdapter<ChatModelBase, CategoryViewHolder>(options) {
+
+                    @Override
+                    protected void onBindViewHolder(@NonNull CategoryViewHolder viewHolder, @SuppressLint("RecyclerView") int position, @NonNull ChatModelBase model) {
+                        final String post_key = getRef(position).getKey();
+                        viewHolder.setTitle(model.getTitulo());
+                        viewHolder.setSendBy(model.getAuthor());
+
+                        // Asegúrate de que el método setImage esté correctamente implementado en CategoryViewHolder
+                        viewHolder.setImage(getActivity(), model.getImagen());
+
+                        Log.v("Seguimiento", "dentro");
+
+                        viewHolder.mViewStructure_h.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                viewDetailsChatStyle(post_key);
+                            }
+                        });
+
+                        viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                reacciones(post_key, viewHolder, position, mRecycler);
+                            }
+                        });
+                    }
+
+                    @NonNull
+                    @Override
+                    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_card, parent, false);
+                        return new CategoryViewHolder(view);
+                    }
+                };
+
+        mRecycler.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
+
+        // Iniciar escucha del adaptador al iniciar la actividad
+        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening();
+
+    }
+
     private void viewDetails(String post_key, View root){
-        // mProgress.setMessage("Accediendo...");
-        //mProgress.show();
-        //mProgress.setCancelable(true);
-
-
-            /*
-            Intent singleBlogIntent = new Intent(getActivity().getApplicationContext(), DetailsRelato.class);
-            singleBlogIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            singleBlogIntent.putExtra("blog_id", post_key);
-            startActivity(singleBlogIntent);
-            */
 
         DescBlankFragment descBlankFragment = new DescBlankFragment();
 
@@ -184,9 +241,23 @@ public class CategoryFragment extends Fragment {
                 .addToBackStack(null).commit();
 
 
-        /*RelativeLayout relativoooo = root.findViewById(R.id.relativoooo);
-        relativoooo.setVisibility(View.GONE);
-        */
+        Log.v("id","id"+post_key);
+    }
+
+    private void viewDetailsChatStyle(String post_key){
+        // mProgress.setMessage("Accediendo...");
+        //mProgress.show();
+        //mProgress.setCancelable(true);
+
+
+        StyleChatFragment styleChatFragment = new StyleChatFragment();
+
+        Bundle datosSend = new Bundle();
+        datosSend.putString("blog_id", post_key);
+        styleChatFragment.setArguments(datosSend);
+
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.contenido_dinamico, styleChatFragment)
+                .addToBackStack(null).commit();
 
         //mProgress.dismiss();
         Log.v("id","id"+post_key);
