@@ -38,7 +38,7 @@ import kotlin.jvm.functions.Function1;
 public class HomeFragment extends Fragment {
 
 
-    private RecyclerView mRecyclerEpisodiosPerdidos;
+    private RecyclerView mRecyclerAllPrincipal;
     private DatabaseReference mDatabase,mDataBaseChatStyle, mDatabaseSlides;
     private ProgressDialog mProgress;
 
@@ -88,18 +88,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View root) {
-        initEpisodiosPerdidos(root);
+        initAllPrincipal(root);
     }
 
-    private void initEpisodiosPerdidos(final View root) {
+    private void initAllPrincipal(final View root) {
         Query queryategorysall = mDatabase;
 
-        mRecyclerEpisodiosPerdidos = root.findViewById(R.id.recyclerEpisodiosPerdidos);
-        mRecyclerEpisodiosPerdidos.setHasFixedSize(true);
+        mRecyclerAllPrincipal = root.findViewById(R.id.recyclerAllPrincipal);
+        mRecyclerAllPrincipal.setHasFixedSize(true);
 
         // Configurar GridLayoutManager con 2 columnas (ajusta según tus necesidades)
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerEpisodiosPerdidos.setLayoutManager(gridLayoutManager);
+        mRecyclerAllPrincipal.setLayoutManager(gridLayoutManager);
 
         // Configurar FirebaseRecyclerOptions
         FirebaseRecyclerOptions<Category> options =
@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
                         .build();
 
         // Adaptador FirebaseRecyclerAdapter
-        final FirebaseRecyclerAdapter<Category, CategoryViewHolder> firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos =
+        final FirebaseRecyclerAdapter<Category, CategoryViewHolder> firebaseRecyclerAdaptermRecyclerALlPrincipal =
                 new FirebaseRecyclerAdapter<Category, CategoryViewHolder>(options) {
 
                     @Override
@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
                         viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                reacciones(post_key, viewHolder, position, mRecyclerEpisodiosPerdidos);
+                                reacciones(post_key, viewHolder, position, mRecyclerAllPrincipal);
                             }
                         });
                     }
@@ -145,21 +145,21 @@ public class HomeFragment extends Fragment {
                     }
                 };
 
-        mRecyclerEpisodiosPerdidos.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
+        mRecyclerAllPrincipal.setAdapter(firebaseRecyclerAdaptermRecyclerALlPrincipal);
 
         // Iniciar escucha del adaptador al iniciar la actividad
-        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening();
+        firebaseRecyclerAdaptermRecyclerALlPrincipal.startListening();
 
         // Detener escucha del adaptador al detener la actividad
         // Asegúrate de manejar el ciclo de vida del adaptador correctamente
         // por ejemplo, en el método onStop de la actividad
-    /*
-    @Override
-    public void onStop() {
-        super.onStop();
-        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.stopListening();
-    }
-    */
+        /*
+        @Override
+        public void onStop() {
+            super.onStop();
+            firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.stopListening();
+        }
+        */
     }
 
     private void viewDetails(String category, View root){
@@ -188,7 +188,7 @@ public class HomeFragment extends Fragment {
         Log.v("id","id"+category);
     }
 
-    private void reacciones(final String post_key, final CategoryViewHolder viewHolder, final int position, final RecyclerView mRecyclerEpisodiosPerdidos) {
+    private void reacciones(final String post_key, final CategoryViewHolder viewHolder, final int position, final RecyclerView mRecyclerAllPrincipal) {
 
         String uID = "";
 
@@ -294,7 +294,7 @@ public class HomeFragment extends Fragment {
                         }
                     }
 
-                    mRecyclerEpisodiosPerdidos.getAdapter().notifyItemChanged(position);
+                    mRecyclerAllPrincipal.getAdapter().notifyItemChanged(position);
                 }
 
                 // Close selector if not invalid item (testing purpose)
