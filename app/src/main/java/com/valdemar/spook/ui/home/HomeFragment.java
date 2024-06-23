@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -98,31 +99,22 @@ public class HomeFragment extends Fragment {
     private void initEpisodiosPerdidos(final View root) {
         Query queryEpisodiosPerdidos = mDatabase.orderByChild("category").equalTo("EpisodiosPerdidos");
 
-        mRecyclerEpisodiosPerdidos = (RecyclerView) root.findViewById(R.id.recyclerEpisodiosPerdidos);
+        mRecyclerEpisodiosPerdidos = root.findViewById(R.id.recyclerEpisodiosPerdidos);
         mRecyclerEpisodiosPerdidos.setHasFixedSize(true);
 
-        LinearLayoutManager layoutManagermRecyclerEpisodiosPerdidos
-                = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-
-        layoutManagermRecyclerEpisodiosPerdidos.setReverseLayout(true);
-        layoutManagermRecyclerEpisodiosPerdidos.setStackFromEnd(true);
-
-        mRecyclerEpisodiosPerdidos.setLayoutManager(layoutManagermRecyclerEpisodiosPerdidos);
+        // Configurar GridLayoutManager con 2 columnas (ajusta según tus necesidades)
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerEpisodiosPerdidos.setLayoutManager(gridLayoutManager);
 
         // Configurar FirebaseRecyclerOptions
-        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>()
-                .setQuery(queryEpisodiosPerdidos, Category.class)
-                .build();
+        FirebaseRecyclerOptions<Category> options =
+                new FirebaseRecyclerOptions.Builder<Category>()
+                        .setQuery(queryEpisodiosPerdidos, Category.class)
+                        .build();
 
-        FirebaseRecyclerAdapter<Category, CategoryViewHolder> firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos =
+        // Adaptador FirebaseRecyclerAdapter
+        final FirebaseRecyclerAdapter<Category, CategoryViewHolder> firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos =
                 new FirebaseRecyclerAdapter<Category, CategoryViewHolder>(options) {
-
-                    @NonNull
-                    @Override
-                    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_card, parent, false);
-                        return new CategoryViewHolder(view);
-                    }
 
                     @Override
                     protected void onBindViewHolder(@NonNull CategoryViewHolder viewHolder, @SuppressLint("RecyclerView") int position, @NonNull Category model) {
@@ -130,7 +122,8 @@ public class HomeFragment extends Fragment {
                         viewHolder.setTitle(model.getTitle());
                         viewHolder.setSendBy(model.getAuthor());
 
-                        viewHolder.setImage(getActivity().getApplicationContext(), model.getImage());
+                        // Asegúrate de que el método setImage esté correctamente implementado en CategoryViewHolder
+                        viewHolder.setImage(getActivity(), model.getImage());
 
                         Log.v("Seguimiento", "dentro");
 
@@ -141,8 +134,6 @@ public class HomeFragment extends Fragment {
                             }
                         });
 
-                        reacciones(post_key, viewHolder, position, mRecyclerEpisodiosPerdidos);
-
                         viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -150,16 +141,31 @@ public class HomeFragment extends Fragment {
                             }
                         });
                     }
+
+                    @NonNull
+                    @Override
+                    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_card, parent, false);
+                        return new CategoryViewHolder(view);
+                    }
                 };
 
         mRecyclerEpisodiosPerdidos.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
 
-        // Importante: Debes iniciar la escucha de cambios en los datos
+        // Iniciar escucha del adaptador al iniciar la actividad
         firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening();
+
+        // Detener escucha del adaptador al detener la actividad
+        // Asegúrate de manejar el ciclo de vida del adaptador correctamente
+        // por ejemplo, en el método onStop de la actividad
+    /*
+    @Override
+    public void onStop() {
+        super.onStop();
+        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.stopListening();
     }
-
-
-
+    */
+    }
 
     private void viewDetails(String post_key, View root){
         // mProgress.setMessage("Accediendo...");
