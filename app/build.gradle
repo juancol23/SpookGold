@@ -49,7 +49,6 @@ dependencies {
     implementation libs.firebase.messaging
     implementation libs.firebase.inappmessaging.display
     implementation libs.firebase.config
-    implementation libs.play.services.ads
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
