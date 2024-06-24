@@ -20,6 +20,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,7 +37,7 @@ import com.valdemar.spook.model.style_chat.ChatModelBase;
 import kotlin.jvm.functions.Function1;
 
 public class CategoryFragment extends Fragment {
-
+    private AdView mAdView;
     private RecyclerView mRecycler;
     private DatabaseReference mDatabase,mDataBaseChatStyle;
     private ProgressDialog mProgress;
@@ -66,8 +68,14 @@ public class CategoryFragment extends Fragment {
 
         initConfigNetwork();
         initView(root);
-
+        initAnuncio(root);
         return root;
+    }
+
+    private void initAnuncio(View root) {
+        mAdView = root.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void initConfigNetwork() {
