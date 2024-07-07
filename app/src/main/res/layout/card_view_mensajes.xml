@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    cardview:cardCornerRadius="10dp"
-    cardview:cardElevation="4dp">
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    cardview:cardCornerRadius="12dp"
+    cardview:cardBackgroundColor="#1E1E1E"> <!-- Color de fondo de la burbuja -->
 
+    <!-- Contenedor principal del mensaje -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="8dp">
 
         <!-- Imagen de perfil -->
         <de.hdodenhof.circleimageview.CircleImageView
@@ -22,7 +25,7 @@
             android:layout_marginEnd="8dp"
             android:layout_centerVertical="true"/>
 
-        <!-- Contenedor para el nombre y la hora del mensaje -->
+        <!-- Contenedor de texto y hora del mensaje -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,12 +33,11 @@
             android:layout_toEndOf="@id/fotoPerfilMensaje"
             android:layout_marginStart="8dp">
 
-            <!-- Contenedor horizontal para el nombre y la hora -->
+            <!-- Línea para nombre y hora -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="4dp">
+                android:orientation="horizontal">
 
                 <!-- Nombre del remitente -->
                 <TextView
@@ -45,17 +47,20 @@
                     android:layout_weight="1"
                     android:text="Valdemar Colichón"
                     android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
 
                 <!-- Hora del mensaje -->
                 <TextView
                     android:id="@+id/horaMensaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="12sp"/>
+                    android:text="00:00:00 00/00/00"
+                    android:textColor="#B0B0B0"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_vertical"/>
             </LinearLayout>
 
             <!-- Texto del mensaje -->
@@ -63,34 +68,54 @@
                 android:id="@+id/mensajeMensaje"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/my_bubble_shape"
-                android:padding="10dp"
-                android:text="Hola bienvenido"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="8dp"/>
+                android:padding="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/my_bubble_shape2"
+                android:text="Pars descargar"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"/>
         </LinearLayout>
 
-        <!-- Icono para responder o acciones adicionales -->
-
+        <!-- Imagen del mensaje (oculta por defecto) -->
         <ImageView
-            android:id="@+id/imgDelete"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:background="@android:drawable/ic_delete"
+            android:id="@+id/mensajeFoto"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            />
+            android:scaleType="centerCrop"
+            android:layout_below="@id/mensajeMensaje"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:contentDescription="Foto del mensaje"
+            tools:ignore="NotSibling" />
 
-        <ImageView
-            android:id="@+id/imgReplay"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_content_copy_black_24dp"
+        <!-- Botones de acciones (Eliminar y Responder) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="8dp"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:layout_marginEnd="8dp">
 
+            <!-- Botón eliminar -->
+            <ImageView
+                android:id="@+id/imgDelete"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@android:drawable/ic_delete"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:contentDescription="Eliminar mensaje"/>
+
+            <!-- Botón responder -->
+            <ImageView
+                android:id="@+id/imgReplay"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_content_copy_black_24dp"
+                android:contentDescription="Responder mensaje"/>
+        </LinearLayout>
     </RelativeLayout>
-
 </androidx.cardview.widget.CardView>

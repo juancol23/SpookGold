@@ -1,0 +1,7 @@
+<!-- res/drawable/my_bubble_shape.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#2A2A2A"/> <!-- Color de fondo de la burbuja -->
+    <corners android:radius="16dp"/> <!-- Bordes redondeados -->
+    <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp"/>
+    <stroke android:width="1dp" android:color="#3E3E3E"/> <!-- Borde de la burbuja -->
+</shape>
