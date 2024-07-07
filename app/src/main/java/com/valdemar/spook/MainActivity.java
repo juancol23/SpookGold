@@ -25,6 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -57,6 +63,8 @@ import com.valdemar.spook.util.sounds.BackgroundSoundService;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import com.google.android.gms.ads.MobileAds;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -78,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference mDatabaseVersionApp;
     private SharedPreferences prefs_sound = null;
     private SharedPreferences prefs_notificacion = null;
+
+    private RewardedAd rewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -343,6 +353,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Button btnModalCoinsNeed = MyDialog.findViewById(R.id.modal_coins_need_ver_video);
         Button btnModalSalir = MyDialog.findViewById(R.id.modal_coins_need_salir);
 
+
+        MobileAds.initialize(this);
+
+
+
         //if(mRewardedVideoAd.isLoaded()){
             btnModalCoinsNeed.setText("Ver Anuncio");
         //}
@@ -350,16 +365,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnModalCoinsNeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if(mRewardedVideoAd.isLoaded()){
-                    mRewardedVideoAd.show();
-                }else{
-                    Toast.makeText(ViewSpook.this,
-                            "Video no disponible.",
-                            Toast.LENGTH_SHORT).show();
-                }*/
-                Toast.makeText(MainActivity.this,
-                        "Video no disponible.",
-                        Toast.LENGTH_SHORT).show();
+                loadRewardedAd();
+
+
             }
         });
 
@@ -371,6 +379,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         MyDialog.show();
+    }
+
+    private void loadRewardedAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        RewardedAd.load(this, "ca-app-pub-6737839359908908/5362177044", // Reemplaza con tu ID de unidad de anuncio de AdMob
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        rewardedAd = ad;
+                        showRewardedAd();
+                    }
+                });
+    }
+
+    private void showRewardedAd() {
+        if (rewardedAd != null) {
+            rewardedAd.show(this, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // El usuario ha ganado una recompensa
+                    // Puedes manejar la recompensa aquí
+                }
+            });
+        } else {
+            // El anuncio no está listo para mostrarse
+
+            Toast.makeText(this,"Video no disponible. else",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addCoins(int coins) {

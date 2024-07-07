@@ -1,81 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
-    xmlns:cardviews="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    cardviews:cardCornerRadius="10sp">
-    <LinearLayout
+    android:layout_margin="10dp"
+    cardview:cardCornerRadius="10dp"
+    cardview:cardElevation="4dp">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <!-- Imagen de perfil -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/fotoPerfilMensaje"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_launcher"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:layout_centerVertical="true"/>
+
+        <!-- Contenedor para el nombre y la hora del mensaje -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10sp">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/fotoPerfilMensaje"
-                android:layout_width="24sp"
-                android:layout_height="24sp"
-                android:src="@drawable/ic_launcher"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toEndOf="@id/fotoPerfilMensaje"
+            android:layout_marginStart="8dp">
+
+            <!-- Contenedor horizontal para el nombre y la hora -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <!-- Nombre del remitente -->
                 <TextView
                     android:id="@+id/nombreMensaje"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Valdemar Colichón"
-                    android:layout_weight="1"/>
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <!-- Hora del mensaje -->
                 <TextView
                     android:id="@+id/horaMensaje"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="00:00:00 00/00/00"/>
-                
+                    android:text="00:00"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp"/>
             </LinearLayout>
+
+            <!-- Texto del mensaje -->
             <TextView
                 android:id="@+id/mensajeMensaje"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pars descargar"/>
-            <ImageView
-                android:id="@+id/mensajeFoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:background="@drawable/my_bubble_shape"
+                android:padding="10dp"
+                android:text="Hola bienvenido"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="8dp"/>
         </LinearLayout>
 
-        <LinearLayout
+        <!-- Icono para responder o acciones adicionales -->
+
+        <ImageView
+            android:id="@+id/imgDelete"
+            android:visibility="gone"
             android:layout_width="wrap_content"
+            android:background="@android:drawable/ic_delete"
             android:layout_height="wrap_content"
-            android:padding="10sp">
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            />
 
-            <ImageView
-                android:id="@+id/imgDelete"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:background="@android:drawable/ic_delete"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                />
+        <ImageView
+            android:id="@+id/imgReplay"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_content_copy_black_24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_centerVertical="true"/>
 
-            <ImageView
-                android:id="@+id/imgReplay"
-                android:layout_width="wrap_content"
-                android:background="@drawable/ic_content_copy_black_24dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                />
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
