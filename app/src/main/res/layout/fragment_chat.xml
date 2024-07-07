@@ -39,29 +39,51 @@
         >
     </androidx.recyclerview.widget.RecyclerView>
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/btnEnviarFoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/ic_menu_gallery"
-            android:layout_gravity="center"
-            />
-        <EditText
-            android:id="@+id/txtMensaje"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Escribe un mensaje"
-            android:layout_weight="1"/>
+        android:orientation="horizontal"
+        android:background="#121212"
+    android:padding="8dp">
 
-        <Button
-            android:id="@+id/btnEnviar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Enviar"/>
-    </LinearLayout>
+    <!-- Botón para enviar foto -->
+    <ImageButton
+        android:id="@+id/btnEnviarFoto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+    android:src="@drawable/ic_menu_gallery"
+        android:contentDescription="Enviar Foto"
+        app:tint="#FFFFFF" />
+
+    <!-- Campo de texto para el mensaje -->
+    <EditText
+        android:id="@+id/txtMensaje"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/input_background"
+    android:hint="Escribe un mensaje"
+        app:tint="#B0B0B0"
+    android:textColor="#FFFFFF"
+    android:padding="10dp"
+    android:maxLines="3"/>
+
+    <!-- Botón para enviar mensaje -->
+    <ImageButton
+        android:id="@+id/btnEnviar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="?attr/selectableItemBackgroundBorderless"
+    android:src="@drawable/ic_send"
+        android:contentDescription="Enviar Mensaje"
+        app:tint="#FFFFFF" />
+</LinearLayout>
+
 </LinearLayout>
 
 

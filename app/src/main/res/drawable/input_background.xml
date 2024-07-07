@@ -1,0 +1,7 @@
+<!-- res/drawable/input_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#2A2A2A"/> <!-- Color de fondo del input -->
+    <corners android:radius="20dp"/> <!-- Bordes redondeados -->
+    <padding android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp"/>
+    <stroke android:width="1dp" android:color="#3E3E3E"/> <!-- Borde del input -->
+</shape>
