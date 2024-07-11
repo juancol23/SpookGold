@@ -113,7 +113,7 @@ public class AccessRelato extends AppCompatActivity {
                 startActivity(new Intent(AccessRelato.this,ForgetPasswordRelato.class));
             }
         });
-        //initFonts();
+         initFonts();
         checkaccess();
 
     }

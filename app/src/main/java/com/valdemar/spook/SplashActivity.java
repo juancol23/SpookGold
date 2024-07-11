@@ -29,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("histories_notifications");
         FirebaseMessaging.getInstance().subscribeToTopic("chat");
         FirebaseMessaging.getInstance().subscribeToTopic("chats_notifications");
+        initFonts();
 
 
         new Handler().postDelayed(new Runnable() {
@@ -48,14 +49,12 @@ public class SplashActivity extends AppCompatActivity {
                 finish();
             }
         },1000);
-
     }
 
 
 
     private void initFonts() {
-        String pacificoFuente= "fuentes/BloodLust.ttf";
-        this.Pacifico = Typeface.createFromAsset(getAssets(),pacificoFuente);
+        this.Pacifico = Typeface.createFromAsset(getAssets(), "fuentes/Bloodlust.ttf");
         mTitle = findViewById(R.id.title);
         mTitle.setTypeface(Pacifico);
     }
