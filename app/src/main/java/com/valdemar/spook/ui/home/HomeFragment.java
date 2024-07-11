@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +39,7 @@ import kotlin.jvm.functions.Function1;
 
 
 public class HomeFragment extends Fragment {
+    private AdView mAdView;
 
 
     private RecyclerView mRecyclerAllPrincipal;
@@ -63,13 +67,26 @@ public class HomeFragment extends Fragment {
 
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+        initAnuncio(root);
 
         initConfigNetwork();
         initView(root);
-
         return root;
     }
 
+
+    private void initAnuncio(View root) {
+        try {
+            mAdView = root.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        } catch (Exception e) {
+            // Maneja la excepción aquí. Puedes usar logging o mostrar un mensaje al usuario.
+            Log.e("initAnuncio", "Error al cargar el anuncio: ", e);
+            // Opcional: Muestra un mensaje al usuario
+            Toast.makeText(root.getContext(), "No se pudo cargar el anuncio. Por favor, inténtalo más tarde.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     @Override
