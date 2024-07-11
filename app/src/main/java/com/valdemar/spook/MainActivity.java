@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -38,6 +39,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -88,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SharedPreferences prefs_notificacion = null;
 
     private RewardedAd rewardedAd;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

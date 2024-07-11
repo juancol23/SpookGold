@@ -7,10 +7,13 @@
     android:id="@+id/contenido_dinamico"
     android:layout_height="match_parent">
 
+
+
     <!-- AppBarLayout con CollapsingToolbarLayout -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -50,10 +53,22 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        app:lottie_rawRes="@raw/spook_v1"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
+
     <!-- NestedScrollView para contenido desplazable -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/recy"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Contenido dentro del NestedScrollView (pueden ser cards, listas, etc.) -->
@@ -69,6 +84,9 @@
                 android:layout_alignParentBottom="true"
                 ads:adSize="BANNER"
                 ads:adUnitId="@string/banner_ad_unit_id"/>
+
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerAllPrincipal"

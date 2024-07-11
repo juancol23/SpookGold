@@ -26,6 +26,7 @@
             android:layout_height="180dp"
             android:src="@mipmap/logotipo" />
 
+
         <TextView
             android:id="@+id/title"
             android:layout_width="220dp"

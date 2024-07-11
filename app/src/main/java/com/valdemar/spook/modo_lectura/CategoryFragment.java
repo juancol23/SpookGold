@@ -7,15 +7,18 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.github.pgreze.reactions.ReactionPopup;
@@ -59,17 +62,33 @@ public class CategoryFragment extends Fragment {
 
     private String blog_category = null;
 
+    private LottieAnimationView mLottieAnimationView;
+    private NestedScrollView mRecy;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root =  inflater.inflate(R.layout.fragment_category, container, false);
-
+        initLoading(root);
         initConfigNetwork();
         initView(root);
         initAnuncio(root);
         return root;
+    }
+
+    private void initLoading(View root) {
+
+        mRecy = root.findViewById(R.id.recy);
+
+        mLottieAnimationView = root.findViewById(R.id.animationView);
+        mLottieAnimationView.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecy.setVisibility(View.VISIBLE);
+            }
+        },1000);
     }
 
     private void initAnuncio(View root) {

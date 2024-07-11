@@ -2,9 +2,11 @@ package com.valdemar.spook.ui.home;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 import com.google.android.gms.ads.AdRequest;
@@ -27,8 +31,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.valdemar.spook.MainActivity;
 import com.valdemar.spook.R;
 import com.github.pgreze.reactions.ReactionPopup;
+import com.valdemar.spook.SplashActivity;
 import com.valdemar.spook.holder.CategoryViewHolder;
 import com.valdemar.spook.model.Category;
 
@@ -62,17 +68,38 @@ public class HomeFragment extends Fragment {
             .child("Reacciones").child("id_proyectos");
 
 
+    private LottieAnimationView mLottieAnimationView;
+    private NestedScrollView mRecy;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+        initLoading(root);
         initAnuncio(root);
 
         initConfigNetwork();
         initView(root);
+
         return root;
     }
+
+    private void initLoading(View root) {
+
+        mRecy = root.findViewById(R.id.recy);
+
+        mLottieAnimationView = root.findViewById(R.id.animationView);
+        mLottieAnimationView.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecy.setVisibility(View.VISIBLE);
+            }
+        },1000);
+    }
+
+
 
 
     private void initAnuncio(View root) {
@@ -134,6 +161,7 @@ public class HomeFragment extends Fragment {
                         viewHolder.setTitle(model.getTitle());
                         viewHolder.setSendBy(model.getAuthor());
 
+
                         // Asegúrate de que el método setImage esté correctamente implementado en CategoryViewHolder
                         viewHolder.setImage(getActivity(), model.getImage());
 
@@ -168,7 +196,6 @@ public class HomeFragment extends Fragment {
                 };
 
         mRecyclerAllPrincipal.setAdapter(firebaseRecyclerAdaptermRecyclerALlPrincipal);
-
         // Iniciar escucha del adaptador al iniciar la actividad
         firebaseRecyclerAdaptermRecyclerALlPrincipal.startListening();
 
