@@ -323,9 +323,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     "Video .",
                     Toast.LENGTH_SHORT).show();
             return true;
-        } else {
-            startActivity(new Intent(MainActivity.this, TiktokMainActivity.class));
-            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -339,11 +336,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     "Video .",
                     Toast.LENGTH_SHORT).show();
             return true;
-        }else if (item.getItemId() == R.id.videoSpooky) {
-            startActivity(new Intent(MainActivity.this, TiktokMainActivity.class));
-            return true;
         }
-
         return super.onOptionsItemSelected(item);
         }
 
