@@ -324,7 +324,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.LENGTH_SHORT).show();
             return true;
         }
+        return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
