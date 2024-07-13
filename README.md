@@ -1,6 +1,6 @@
 # Spook
 
-![Spook Logo](https://lh3.googleusercontent.com/FZk775BD3rJaq3Cv4tyoyYN7fzWMDv9logi1UVWv1W_8JGATJrU0TnlAOjUVl1ARb_M)
+![Spook Logo](https://play-lh.googleusercontent.com/fVkTGYRk5tqKxjvgBjv-Fv6IfU2kvV6hnxbXp0bBrflZOEOqv6y-RT7DAjYZYOuFO-Y=w2560-h1440-rw)
 
 Spook es una aplicación de terror diseñada para los amantes del miedo. Sumérgete en un mundo espeluznante con historias, imágenes y experiencias que te pondrán los pelos de punta. Únete a la comunidad de Spooky y comparte tus experiencias más aterradoras.
 
