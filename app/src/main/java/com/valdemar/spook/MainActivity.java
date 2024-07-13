@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private RewardedAd rewardedAd;
     private AdRequest adRequest;
-    private final static String video_id_prd = "ca-app-pub-3940256099942544/5224354917";
-    private final static String video_id_test = "ca-app-pub-5861158224745303/9834495827";
+    private final static String video_id_test = "ca-app-pub-3940256099942544/5224354917";
+    private final static String video_id_prd = "ca-app-pub-5861158224745303/9834495827";
 
 
 
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MobileAds.initialize(this);
-
         adRequest = new AdRequest.Builder().build();
 
         RewardedAd.load(this, video_id_test, // Reemplaza con tu ID de unidad de anuncio de AdMob
@@ -130,6 +129,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         initView();
+
+    }
+
+    private void initMonedaActual() {
+        int miValorGuardado = monedas.getInt("valorGuardadoTest", 0);
+        // Suma las monedas nuevas al valor guardado
+        // Actualiza el texto en la interfaz de usuario
+        mId_monedas_text = (TextView) findViewById(R.id.monedas_profile);
+        mId_monedas_text.setText("Monedas: " + miValorGuardado);
     }
 
     @Override
@@ -183,6 +191,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
+        initMonedaActual();
+
         return true;
     }
 
@@ -415,22 +426,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void addCoins(int coins) {
-
+        // Obtiene el valor guardado previamente
         int miValorGuardado = monedas.getInt("valorGuardadoTest", 0);
-        int allCoins  = miValorGuardado +coins;
-        mId_monedas_text.setText("Monedas: "+allCoins);
-        monedas.edit().putInt("valorGuardadoTest", allCoins).apply();
-        Log.v("rewardItem",""+allCoins+miValorGuardado+coins);
+        // Suma las monedas nuevas al valor guardado
+        int allCoins = miValorGuardado + coins;
+        // Actualiza el texto en la interfaz de usuario
+        mId_monedas_text.setText("Monedas: " + allCoins);
+        // Guarda el nuevo valor en SharedPreferences
+        SharedPreferences.Editor editor = monedas.edit();
+        editor.putInt("valorGuardadoTest", allCoins);
+        editor.apply(); // O usa commit() si prefieres asegurarte que los datos se guarden inmediatamente
+        // Registro en el log para depuración
+        Log.v("rewardItem", "Total Coins: " + allCoins + ", Previous Coins: " + miValorGuardado + ", Added Coins: " + coins);
 
-        RewardedAd.load(this, video_id_test, // Reemplaza con tu ID de unidad de anuncio de AdMob
-                adRequest, new RewardedAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull RewardedAd ad) {
-                        rewardedAd = ad;
-
-                    }
-                });
+        // Carga un anuncio recompensado
+        RewardedAd.load(this, video_id_test, adRequest, new RewardedAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull RewardedAd ad) {
+                rewardedAd = ad;
+            }
+        });
     }
+
 
 
     private void initNotificacion() {
