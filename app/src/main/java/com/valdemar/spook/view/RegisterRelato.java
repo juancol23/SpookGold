@@ -74,12 +74,12 @@ public class RegisterRelato extends AppCompatActivity {
         String text = "<font color='#da152c'>Crear </font>Cuenta";
         mTitleRegister.setText(Html.fromHtml(text), TextView.BufferType.SPANNABLE);
 
-         String bloodLustFuente= "fuentes/BloodLust.ttf";
+         /*String bloodLustFuente= "fuentes/BloodLust.ttf";
         String nightmareFuente= "fuentes/BloodLust.ttf";
         this.BloodLust = Typeface.createFromAsset(getAssets(),bloodLustFuente);
         this.Nightmare = Typeface.createFromAsset(getAssets(),nightmareFuente);
         mTitleRegister.setTypeface(BloodLust);
-
+*/
         mRelato_regis_body = (LinearLayout) findViewById(R.id.relato_regis_body);
 
 

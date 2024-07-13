@@ -113,7 +113,7 @@ public class AccessRelato extends AppCompatActivity {
                 startActivity(new Intent(AccessRelato.this,ForgetPasswordRelato.class));
             }
         });
-         initFonts();
+         //initFonts();
         checkaccess();
 
     }
@@ -130,7 +130,7 @@ public class AccessRelato extends AppCompatActivity {
     }
 
     private void initFonts() {
-        String pacificoFuente= "fuentes/BloodLust.ttf";
+        String pacificoFuente= "/fuentes/BloodLust.ttf";
         this.Pacifico = Typeface.createFromAsset(getAssets(),pacificoFuente);
         splash_text_spook.setTypeface(Pacifico);
     }

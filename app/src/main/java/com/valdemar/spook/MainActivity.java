@@ -97,6 +97,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobileAds.initialize(this);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", // Reemplaza con tu ID de unidad de anuncio de AdMob
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        rewardedAd = ad;
+
+                    }
+                });
+
+
+        /*   Production
+        RewardedAd.load(this, "ca-app-pub-5861158224745303/9834495827", // Reemplaza con tu ID de unidad de anuncio de AdMob
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        rewardedAd = ad;
+
+                    }
+                });
+                */
 
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -164,33 +188,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 if(user != null) {
                     // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
-                    AlertDialog.Builder makeDialog = new AlertDialog.Builder(MainActivity.this);
-                    makeDialog.setMessage("Si continuar editarás tu foto de perfil");
-                    makeDialog.setTitle("Foto perfil");
-
-                    makeDialog.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                            i.setType("image/jpeg");
-                            i.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
-                            startActivityForResult(Intent.createChooser(i,"Selecciona una foto"),PHOTO_PERFIL);
-                        }
-                    });
-
-                    makeDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    AlertDialog ad = makeDialog.create();
-                    ad.show();
+                    mostrarDialog(v);
                 }
             }
         });
         return true;
+    }
+
+    private void mostrarDialog(View v) {
+        AlertDialog.Builder makeDialog = new AlertDialog.Builder(MainActivity.this);
+        makeDialog.setMessage("Si continuar editarás tu foto de perfil");
+        makeDialog.setTitle("Foto perfil");
+
+        makeDialog.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.setType("image/jpeg");
+                i.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
+                startActivityForResult(Intent.createChooser(i,"Selecciona una foto"),PHOTO_PERFIL);
+            }
+        });
+
+        makeDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog ad = makeDialog.create();
+        ad.show();
+
     }
 
     private void initView() {
@@ -319,9 +348,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.busquedaSpooky) {
             openCoins();
-            Toast.makeText(MainActivity.this,
-                    "Video .",
-                    Toast.LENGTH_SHORT).show();
             return true;
         }
         return true;
@@ -334,9 +360,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.busquedaSpooky) {
             // Toast.makeText(ViewSpook.this,"Buqueda",Toast.LENGTH_SHORT).show();
             openCoins();
-            Toast.makeText(MainActivity.this,
-                    "Video .",
-                    Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this,"Video .",Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -353,11 +377,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Button btnModalCoinsNeed = MyDialog.findViewById(R.id.modal_coins_need_ver_video);
         Button btnModalSalir = MyDialog.findViewById(R.id.modal_coins_need_salir);
 
-
-        MobileAds.initialize(this);
-
-
-
         //if(mRewardedVideoAd.isLoaded()){
             btnModalCoinsNeed.setText("Ver Anuncio");
         //}
@@ -365,8 +384,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnModalCoinsNeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadRewardedAd();
-
+                showRewardedAd();
 
             }
         });
@@ -381,18 +399,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MyDialog.show();
     }
 
-    private void loadRewardedAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        RewardedAd.load(this, "ca-app-pub-6737839359908908/5362177044", // Reemplaza con tu ID de unidad de anuncio de AdMob
-                adRequest, new RewardedAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull RewardedAd ad) {
-                        rewardedAd = ad;
-                        showRewardedAd();
-                    }
-                });
-    }
 
     private void showRewardedAd() {
         if (rewardedAd != null) {
@@ -401,6 +407,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                     // El usuario ha ganado una recompensa
                     // Puedes manejar la recompensa aquí
+                    Toast.makeText(MainActivity.this,"Recompensa conseguida",Toast.LENGTH_SHORT).show();
+                    addCoins(5);
                 }
             });
         } else {

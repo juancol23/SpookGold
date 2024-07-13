@@ -68,11 +68,11 @@ public class ForgetPasswordRelato extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mProgress = new ProgressDialog(this);
 
-        String bloodLustFuente= "fuentes/BloodLust.ttf";
+     /*    String bloodLustFuente= "fuentes/BloodLust.ttf";
         String nightmareFuente= "fuentes/BloodLust.ttf";
         this.BloodLust = Typeface.createFromAsset(getAssets(),bloodLustFuente);
         this.Nightmare = Typeface.createFromAsset(getAssets(),nightmareFuente);
-        title.setTypeface(BloodLust);
+        title.setTypeface(BloodLust);*/
 
         mForget_user_email = (EditText) findViewById(R.id.forget_user_email);
 

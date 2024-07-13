@@ -43,6 +43,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.valdemar.spook.MainActivity;
+import com.valdemar.spook.ProfileActivity;
 import com.valdemar.spook.R;
 import com.valdemar.spook.model.style_chat.IModal;
 import com.valdemar.spook.ui.home.HomeFragment;
@@ -139,7 +140,7 @@ public class ChatFragment extends Fragment implements AdapterMensajes.OnEliminar
         IModal listener = new IModal() {
             @Override
             public void modalIniciar(String nombre, String url, String uidUser) {
-                //initViewProfile(nombre,url, uidUser);
+                initViewProfile(nombre,url, uidUser);
 
             }
 
@@ -363,53 +364,60 @@ public class ChatFragment extends Fragment implements AdapterMensajes.OnEliminar
 
         if(requestCode == PHOTO_SEND && resultCode == RESULT_OK){
             if(user != null) {
-                // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
-                AlertDialog.Builder makeDialog = new AlertDialog.Builder(getActivity());
-                makeDialog.setMessage("Si continuas compartirás la imagen seleccionada.");
-                makeDialog.setTitle("Publicar foto");
 
-                makeDialog.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mProgresDialog.setMessage("Publicando imagen");
-                        mProgresDialog.setCancelable(true);
-                        mProgresDialog.show();
-                        Uri u = data.getData();
-                        storageReference = storage.getReference("imagenes_chat");//imagenes_chat
-                        final StorageReference fotoReferencia = storageReference.child(u.getLastPathSegment());
-                        fotoReferencia.putFile(u).addOnSuccessListener(getActivity(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                myDialog(data);
 
-                                fotoReferencia.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        Uri downloadUrl = uri;
-                                        //Uri u = taskSnapshot.getDownloadUrl();
-                                        MensajeEnviar m = new MensajeEnviar(name+" ha compartido una foto",downloadUrl.toString(),nombre.getText().toString(),fotoPerfilCadena,"2", ServerValue.TIMESTAMP,""+user.getUid());
-                                        databaseReference.push().setValue(m);
-                                        mProgresDialog.dismiss();
-
-                                    }
-                                });
-
-                            }
-                        });
-                    }
-                });
-
-                makeDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog ad = makeDialog.create();
-                ad.show();
+            }else{
+                Toast.makeText(getActivity(),"Necesitas Iniciar Sesión",Toast.LENGTH_LONG).show();
             }
 
         }
+    }
+
+    private void myDialog(Intent data) {
+        AlertDialog.Builder makeDialog = new AlertDialog.Builder(getActivity());
+        makeDialog.setMessage("Si continuas compartirás la imagen seleccionada.");
+        makeDialog.setTitle("Publicar foto");
+
+        makeDialog.setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mProgresDialog.setMessage("Publicando imagen");
+                mProgresDialog.setCancelable(true);
+                mProgresDialog.show();
+                Uri u = data.getData();
+                storageReference = storage.getReference("imagenes_chat");//imagenes_chat
+                final StorageReference fotoReferencia = storageReference.child(u.getLastPathSegment());
+                fotoReferencia.putFile(u).addOnSuccessListener(getActivity(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        fotoReferencia.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Uri downloadUrl = uri;
+                                //Uri u = taskSnapshot.getDownloadUrl();
+                                MensajeEnviar m = new MensajeEnviar(name+" ha compartido una foto",downloadUrl.toString(),nombre.getText().toString(),fotoPerfilCadena,"2", ServerValue.TIMESTAMP,""+user.getUid());
+                                databaseReference.push().setValue(m);
+                                mProgresDialog.dismiss();
+
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+
+        makeDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog ad = makeDialog.create();
+        ad.show();
     }
 
 
