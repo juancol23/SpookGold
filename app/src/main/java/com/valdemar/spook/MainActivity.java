@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private RewardedAd rewardedAd;
     private AdRequest adRequest;
-    private final static String video_id_test = "ca-app-pub-3940256099942544/5224354917";
-    private final static String video_id_prd = "ca-app-pub-5861158224745303/9834495827";
+    private final static String video_id_prd = "ca-app-pub-3940256099942544/5224354917";
+    private final static String video_id_test = "ca-app-pub-5861158224745303/9834495827";
 
 
 

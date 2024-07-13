@@ -35,7 +35,7 @@ import com.valdemar.spook.MainActivity;
 import com.valdemar.spook.R;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.valdemar.spook.SplashActivity;
-import com.valdemar.spook.holder.CategoryViewHolder;
+import com.valdemar.spook.holder.CategoryViewHolderPro;
 import com.valdemar.spook.model.Category;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -152,11 +152,11 @@ public class HomeFragment extends Fragment {
                         .build();
 
         // Adaptador FirebaseRecyclerAdapter
-        final FirebaseRecyclerAdapter<Category, CategoryViewHolder> firebaseRecyclerAdaptermRecyclerALlPrincipal =
-                new FirebaseRecyclerAdapter<Category, CategoryViewHolder>(options) {
+        final FirebaseRecyclerAdapter<Category, CategoryViewHolderPro> firebaseRecyclerAdaptermRecyclerALlPrincipal =
+                new FirebaseRecyclerAdapter<Category, CategoryViewHolderPro>(options) {
 
                     @Override
-                    protected void onBindViewHolder(@NonNull CategoryViewHolder viewHolder, @SuppressLint("RecyclerView") int position, @NonNull Category model) {
+                    protected void onBindViewHolder(@NonNull CategoryViewHolderPro viewHolder, @SuppressLint("RecyclerView") int position, @NonNull Category model) {
                         final String post_key = getRef(position).getKey();
                         viewHolder.setTitle(model.getTitle());
                         viewHolder.setSendBy(model.getAuthor());
@@ -179,19 +179,19 @@ public class HomeFragment extends Fragment {
                             }
                         });
 
-                        viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
+                       /* viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 reacciones(post_key, viewHolder, position, mRecyclerAllPrincipal);
                             }
-                        });
+                        });*/
                     }
 
                     @NonNull
                     @Override
-                    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    public CategoryViewHolderPro onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_card, parent, false);
-                        return new CategoryViewHolder(view);
+                        return new CategoryViewHolderPro(view);
                     }
                 };
 
@@ -237,7 +237,7 @@ public class HomeFragment extends Fragment {
         Log.v("id","id"+category);
     }
 
-    private void reacciones(final String post_key, final CategoryViewHolder viewHolder, final int position, final RecyclerView mRecyclerAllPrincipal) {
+    private void reacciones(final String post_key, final CategoryViewHolderPro viewHolder, final int position, final RecyclerView mRecyclerAllPrincipal) {
 
         String uID = "";
 

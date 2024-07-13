@@ -12,10 +12,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.valdemar.spook.R;
 
-public class CategoryViewHolder extends RecyclerView.ViewHolder{
+public class CategoryViewHolderPro extends RecyclerView.ViewHolder{
 
     public View mViewStructure_h;
     public TextView mItem_recycler_structure_title_h;
@@ -34,7 +33,7 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder{
 
     ImageButton mfavoriteBtn;
 
-    public CategoryViewHolder(View itemView) {
+    public CategoryViewHolderPro(View itemView) {
         super(itemView);
         mViewStructure_h = itemView ;
         mReaction_icon = itemView.findViewById(R.id.reaction_icon);
@@ -63,13 +62,9 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder{
     public void setImage(Context context, String image){
         mPost_image_h = mViewStructure_h.findViewById(R.id.thumbnail);
 
-        int width = 200; // Define el ancho deseado
-        int height = 200; // Define la altura deseada
 
         Glide.with(context)
                 .load(image)
-                .override(width, height) // Redimensiona la imagen
-                .transform(new CenterCrop(), new RoundedCorners(16)) // Opcional: Aplica transformaciones
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mPost_image_h);
 

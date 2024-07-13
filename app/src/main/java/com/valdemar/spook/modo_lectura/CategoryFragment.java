@@ -11,6 +11,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import android.os.Handler;
 import android.util.Log;
@@ -133,6 +134,10 @@ public class CategoryFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecycler.setLayoutManager(gridLayoutManager);
 
+        mRecycler.setItemViewCacheSize(100); // Incrementa el tamaño del caché
+        mRecycler.setDrawingCacheEnabled(true);
+        mRecycler.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
         // Configurar FirebaseRecyclerOptions
         FirebaseRecyclerOptions<Category> options =
                 new FirebaseRecyclerOptions.Builder<Category>()
@@ -160,13 +165,13 @@ public class CategoryFragment extends Fragment {
                                 viewDetails(post_key, root);
                             }
                         });
-
+                /*
                         viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 reacciones(post_key, viewHolder, position, mRecycler);
                             }
-                        });
+                        });     */
                     }
 
                     @NonNull
@@ -180,7 +185,10 @@ public class CategoryFragment extends Fragment {
         mRecycler.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
 
         // Iniciar escucha del adaptador al iniciar la actividad
-        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening();
+
+        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening(); ((SimpleItemAnimator) mRecycler.getItemAnimator()).setSupportsChangeAnimations(false); // Disable animations
+
+
 
         // Detener escucha del adaptador al detener la actividad
         // Asegúrate de manejar el ciclo de vida del adaptador correctamente
@@ -233,12 +241,12 @@ public class CategoryFragment extends Fragment {
                             }
                         });
 
-                        viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
+                        /*viewHolder.mReaction_icon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 reacciones(post_key, viewHolder, position, mRecycler);
                             }
-                        });
+                        });*/
                     }
 
                     @NonNull
@@ -251,8 +259,7 @@ public class CategoryFragment extends Fragment {
 
         mRecycler.setAdapter(firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos);
 
-        // Iniciar escucha del adaptador al iniciar la actividad
-        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening();
+        firebaseRecyclerAdaptermRecyclerEpisodiosPerdidos.startListening(); ((SimpleItemAnimator) mRecycler.getItemAnimator()).setSupportsChangeAnimations(false); // Disable animations
 
     }
 
