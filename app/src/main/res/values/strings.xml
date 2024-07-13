@@ -25,7 +25,7 @@
         <item>clasico</item>
     </string-array>
 
-    <string name="banner_ad_unit_id_test">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_ad_unit_id_prd">ca-app-pub-5861158224745303/9531243492</string>
+    <string name="banner_ad_unit_id_test">ca-app-pub-5861158224745303/9531243492</string>
+    <string name="banner_ad_unit_id_prd">ca-app-pub-3940256099942544/6300978111</string>
     <string name="video_ad_unit_id">ca-app-pub-5861158224745303/9834495827</string>
 </resources>

@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SharedPreferences prefs_notificacion = null;
 
     private RewardedAd rewardedAd;
+    private AdRequest adRequest;
+    private final static String video_id_prd = "ca-app-pub-3940256099942544/5224354917";
+    private final static String video_id_test = "ca-app-pub-5861158224745303/9834495827";
 
 
 
@@ -99,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         MobileAds.initialize(this);
 
-        AdRequest adRequest = new AdRequest.Builder().build();
+        adRequest = new AdRequest.Builder().build();
 
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", // Reemplaza con tu ID de unidad de anuncio de AdMob
+        RewardedAd.load(this, video_id_test, // Reemplaza con tu ID de unidad de anuncio de AdMob
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
@@ -109,18 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
-
-
-        /*   Production
-        RewardedAd.load(this, "ca-app-pub-5861158224745303/9834495827", // Reemplaza con tu ID de unidad de anuncio de AdMob
-                adRequest, new RewardedAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull RewardedAd ad) {
-                        rewardedAd = ad;
-
-                    }
-                });
-                */
 
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -359,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle item selection
         if (item.getItemId() == R.id.busquedaSpooky) {
             // Toast.makeText(ViewSpook.this,"Buqueda",Toast.LENGTH_SHORT).show();
+
             openCoins();
             //Toast.makeText(MainActivity.this,"Video .",Toast.LENGTH_SHORT).show();
             return true;
@@ -408,9 +400,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // El usuario ha ganado una recompensa
                     // Puedes manejar la recompensa aquí
                     Toast.makeText(MainActivity.this,"Recompensa conseguida",Toast.LENGTH_SHORT).show();
+
                     addCoins(5);
                 }
             });
+
+
         } else {
             // El anuncio no está listo para mostrarse
 
@@ -426,6 +421,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mId_monedas_text.setText("Monedas: "+allCoins);
         monedas.edit().putInt("valorGuardadoTest", allCoins).apply();
         Log.v("rewardItem",""+allCoins+miValorGuardado+coins);
+
+        RewardedAd.load(this, video_id_test, // Reemplaza con tu ID de unidad de anuncio de AdMob
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd ad) {
+                        rewardedAd = ad;
+
+                    }
+                });
     }
 
 
