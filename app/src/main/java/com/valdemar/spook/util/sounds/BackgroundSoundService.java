@@ -25,7 +25,7 @@ public class BackgroundSoundService extends Service {
         player.setLooping(true); // Set looping
         player.setVolume(100,100);
 
-        prefs = getSharedPreferences("com.valdemar.utilidades.sounds", MODE_PRIVATE);
+        prefs = getSharedPreferences("com.valdemar.spook.util.sounds", MODE_PRIVATE);
 
 
 

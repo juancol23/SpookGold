@@ -443,6 +443,7 @@ public class ChatFragment extends Fragment implements AdapterMensajes.OnEliminar
             @Override
             public void onClick(View v) {
                 iniciaSesion();
+
                 MyDialog.dismiss();
 
             }
@@ -464,7 +465,9 @@ public class ChatFragment extends Fragment implements AdapterMensajes.OnEliminar
     }
 
     private void iniciaSesion(){
+
         startActivity(new Intent(getActivity(), AccessRelato.class));
+        getActivity().finish();
     }
 
     public void hideSoftKeyboard() {
