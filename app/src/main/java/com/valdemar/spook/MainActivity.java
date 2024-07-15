@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void validarActualizacion(){
 
-        mDatabaseVersionApp = FirebaseDatabase.getInstance().getReference().child("VersionApp");
+        mDatabaseVersionApp = FirebaseDatabase.getInstance().getReference().child("VersionAppRelatos");
         mDatabaseVersionApp.keepSynced(true);
         mDatabaseVersionApp.addValueEventListener(new ValueEventListener() {
             @Override
