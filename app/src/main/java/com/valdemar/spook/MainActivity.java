@@ -351,6 +351,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.busquedaSpooky) {
             openCoins();
             return true;
+        }if (item.getItemId() == R.id.videoSpooky) {
+            startActivity(new Intent(MainActivity.this, TiktokMainActivity.class));
+            return true;
         }
         return true;
     }
