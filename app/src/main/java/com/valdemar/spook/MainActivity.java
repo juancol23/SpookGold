@@ -368,6 +368,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             openCoins();
             //Toast.makeText(MainActivity.this,"Video .",Toast.LENGTH_SHORT).show();
             return true;
+        }if (item.getItemId() == R.id.videoSpooky) {
+            startActivity(new Intent(MainActivity.this, TiktokMainActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
         }
